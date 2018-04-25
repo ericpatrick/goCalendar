@@ -4,13 +4,13 @@ import Login from 'pages/Login';
 import Register from 'pages/Register';
 import Calendar from 'pages/Calendar';
 
-const Routes = StackNavigator({
+const createNavigator = (isLogged = false) => StackNavigator({
   Identify: { screen: Identify },
   Login: { screen: Login },
   Register: { screen: Register },
   Calendar: { screen: Calendar },
 }, {
-  initialRouteName: 'Identify',
+  initialRouteName: isLogged ? 'Calendar' : 'Identify',
 });
 
-export default Routes;
+export default createNavigator;

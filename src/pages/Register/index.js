@@ -20,7 +20,7 @@ class Register extends Component {
 
   static propTypes = {
     phone: PropTypes.shape({
-      phoneStatus: PropTypes.number.isRequired,
+      phoneNumber: PropTypes.string.isRequired,
     }).isRequired,
     checkPhone: PropTypes.func.isRequired,
     navigation: PropTypes.shape({
@@ -29,7 +29,8 @@ class Register extends Component {
   };
 
   state = {
-    phone: '',
+    completeName: '',
+    password: '',
   };
 
   componentWillUpdate() {
@@ -63,8 +64,35 @@ class Register extends Component {
             style={styles.callNumber}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
-            value={this.state.phone}
-            onChangeText={this.changeInput}
+            value={this.props.phone.phoneNumber}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Icon name="phone" size={20} color={colors.transparentWhite} style={styles.icon} />
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholder="Seu número de telefone"
+            style={styles.callNumber}
+            underlineColorAndroid="rgba(0, 0, 0, 0)"
+            placeholderTextColor={colors.transparentWhite}
+            secureTextEntry
+            value={this.state.completeName}
+            onChangeText={text => this.setState({ completeName: text })}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Icon name="lock" size={20} color={colors.transparentWhite} style={styles.icon} />
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="numeric"
+            placeholder="Sua senha secreta"
+            style={styles.callNumber}
+            underlineColorAndroid="rgba(0, 0, 0, 0)"
+            placeholderTextColor={colors.transparentWhite}
+            value={this.state.password}
+            onChangeText={text => this.setState({ password: text })}
           />
         </View>
         <TouchableOpacity

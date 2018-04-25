@@ -2,6 +2,7 @@ export const Types = {
   AUTHENTICATE: 'auth/AUTHENTICATE',
   AUTHENTICATE_SUCCESS: 'auth/AUTHENTICATE_SUCCESS',
   AUTHENTICATE_FAIL: 'auth/AUTHENTICATE_FAIL',
+  UPDATE_TOKEN: 'auth/UPDATE_TOKEN',
 };
 
 const INITIAL_STATE = {
@@ -30,6 +31,11 @@ export default function auth(state = INITIAL_STATE, action) {
         loading: false,
         error: action.payload.error,
       };
+    case Types.UPDATE_TOKEN:
+      return {
+        ...state,
+        token: action.payload.token,
+      };
     default:
       return state;
   }
@@ -55,6 +61,13 @@ export const Creators = {
     type: Types.AUTHENTICATE_FAIL,
     payload: {
       error,
+    }
+  }),
+
+  updateToken: token => ({
+    type: Types.UPDATE_TOKEN,
+    payload: {
+      token,
     }
   }),
 };

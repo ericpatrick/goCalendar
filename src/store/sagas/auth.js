@@ -15,7 +15,7 @@ export function* authenticate(action) {
     console.tron.log(data);
 
     const key = Helpers.getStorageKey('token');
-    AsyncStorage.setItem(key, data.token);
+    yield call(AsyncStorage.setItem, key, data.token);
 
     yield put(AuthCreators.authenticateSuccess(data.token));
   } catch (error) {

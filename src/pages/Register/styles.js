@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: metrics.baseMargin * 7,
+    marginBottom: metrics.baseMargin * 6,
   },
 
   inputContainer: {
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.darkPurple,
     borderRadius: metrics.baseRadius,
+    marginTop: metrics.baseMargin,
   },
 
   callNumber: {
