@@ -12,7 +12,6 @@ export function* authenticate(action) {
       password: action.payload.password,
     };
     const { data } = yield call(api.post, '/authenticate', params);
-    console.tron.log(data);
 
     const key = Helpers.getStorageKey('token');
     yield call(AsyncStorage.setItem, key, data.token);

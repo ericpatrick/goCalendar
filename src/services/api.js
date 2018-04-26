@@ -37,6 +37,14 @@ class Api {
         this.response.status = 401;
       }
     }
+
+    if (url.contains('user')) {
+      this.response.status = 201;
+      this.response.data = {
+        phone: params.phone,
+        fullName: params.fullName,
+      };
+    }
     return new Promise(resolve => resolve(this.response));
   };
 }

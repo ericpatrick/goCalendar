@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Creators as PhoneCreators } from 'store/ducks/phone';
+import { Creators as UserCreators } from 'store/ducks/user';
 import { PhoneStatus } from 'store/models';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,12 +20,13 @@ class Identify extends Component {
   };
 
   static propTypes = {
-    phone: PropTypes.shape({
+    user: PropTypes.shape({
       phoneStatus: PropTypes.number.isRequired,
     }).isRequired,
     checkPhone: PropTypes.func.isRequired,
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
+      dispatch: PropTypes.func,
     }).isRequired,
   };
 
@@ -33,13 +35,23 @@ class Identify extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const { phoneStatus } = nextProps.phone;
+    const { phoneStatus } = nextProps.user;
     if (phoneStatus === PhoneStatus.REGISTERED) {
-      this.props.navigation.navigate('Login');
+      this.changeToToute('Login')
     } else if (phoneStatus === PhoneStatus.UNREGISTERED) {
-      this.props.navigation.navigate('Register');
+      this.changeToToute('Register')
     }
   }
+
+  changeToToute = (route) => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: route }),
+      ],
+    });
+    this.props.navigation.dispatch(resetAction);
+  };
 
   checkPhone = () => {
     this.props.checkPhone(this.state.phone);
@@ -75,8 +87,8 @@ class Identify extends Component {
 }
 
 const mapStateToProps = state => ({
-  phone: state.phone,
+  user: state.user,
 });
-const mapDispatchTOProps = dispatch => bindActionCreators(PhoneCreators, dispatch);
+const mapDispatchTOProps = dispatch => bindActionCreators(UserCreators, dispatch);
 
 export default connect(mapStateToProps, mapDispatchTOProps)(Identify);

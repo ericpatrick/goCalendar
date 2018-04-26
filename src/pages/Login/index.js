@@ -19,7 +19,7 @@ class Login extends Component {
   };
 
   static propTypes = {
-    phone: PropTypes.shape({
+    user: PropTypes.shape({
       phoneNumber: PropTypes.string.isRequired,
     }).isRequired,
     auth: PropTypes.shape({
@@ -45,12 +45,11 @@ class Login extends Component {
         ],
       });
       this.props.navigation.dispatch(resetAction);
-      this.props.navigation.navigate('Calendar');
     }
   }
 
   login = () => {
-    this.props.authenticate(this.props.phone.phoneNumber, this.state.password);
+    this.props.authenticate(this.props.user.phoneNumber, this.state.password);
   };
 
   render() {
@@ -67,7 +66,7 @@ class Login extends Component {
             style={styles.callNumber}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
-            value={this.props.phone.phoneNumber}
+            value={this.props.user.phoneNumber}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -98,7 +97,7 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  phone: state.phone,
+  user: state.user,
 });
 const mapDispatchTOProps = dispatch => bindActionCreators(AuthCreators, dispatch);
 
