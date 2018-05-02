@@ -9,7 +9,7 @@ import 'config/ReactotronConfig';
 import 'config/DevtoolsConfig';
 
 import store from 'store';
-import { Creators as AuthCreators} from 'store/ducks/auth'
+import { Creators as AuthCreators} from 'store/ducks/auth';
 
 export default class App extends Component {
   static propTypes = {};

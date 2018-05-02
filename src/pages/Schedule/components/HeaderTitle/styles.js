@@ -1,13 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { colors, metrics } from 'styles';
+import { colors } from 'styles';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: metrics.basePadding * 2,
-    backgroundColor: colors.primary,
+  },
+  title: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
