@@ -7,9 +7,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: metrics.basePadding * 2,
     paddingTop: metrics.basePadding * 2,
   },
-  itemContainer: {
-    ...general.box,
-    marginBottom: metrics.baseMargin,
+  listContent: {
+    paddingTop: 350,
   },
 });
 

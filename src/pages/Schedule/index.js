@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, Text } from 'react-native';
+import { View, Animated, Text, ScrollView } from 'react-native';
 
 import AddButton from './components/AddButton';
 import AccountButton from './components/AccountButton';
@@ -22,13 +22,29 @@ export default class Schedule extends Component {
 
   static propTypes = {};
 
-  state = {};
+  state = {
+    scrollOffset: new Animated.Value(0),
+  };
 
   render() {
     return (
       <View style={styles.container}>
-        <Calendar />
-        <EventList />
+        <Calendar
+          containerStyle={{
+            height: this.state.scrollOffset.interpolate({
+              inputRange: [0, 290],
+              outputRange: [350, 60],
+              extrapolate: 'clamp',
+            }),
+          }}
+        />
+        <EventList
+          onScroll={Animated.event([{
+            nativeEvent: {
+              contentOffset: { y: this.state.scrollOffset },
+            },
+          }])}
+        />
       </View>
     );
   }

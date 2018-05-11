@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, FlatList, Text } from 'react-native';
+import { FlatList } from 'react-native';
+
+import EventItem from 'pages/Schedule/components/EventItem';
 
 import styles from './styles';
 
@@ -24,30 +26,42 @@ const data = [
     name: 'Pesquisar terno',
     place: 'Campinas',
   },
+  {
+    id: 4,
+    date: '2018-05-01',
+    name: 'Abastecer o carro',
+    place: 'Campinas',
+  },
+  {
+    id: 5,
+    date: '2018-05-05',
+    name: 'Abastecer a moto',
+    place: 'Campinas',
+  },
 ];
 
 
 export default class EventList extends Component {
-  static propTypes = {};
+  static propTypes = {
+    onScroll: PropTypes.func,
+  };
 
-  static defaultProps = {};
+  static defaultProps = {
+    onScroll: () => {},
+  };
 
   state = {};
-
-  renderItems = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text>{item.name}</Text>
-      <Text>{item.place}</Text>
-    </View>
-  );
 
   render() {
     return (
       <FlatList
         data={data}
-        renderItem={this.renderItems}
+        renderItem={({ item }) => <EventItem data={item} />}
         keyExtractor={item => String(item.id)}
+        scrollEventThrottle={16}
+        onScroll={this.props.onScroll}
         style={styles.list}
+        contentContainerStyle={styles.listContent}
       />
     );
   }

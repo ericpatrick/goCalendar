@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View } from 'react-native';
+import { View, Animated } from 'react-native';
 import { LocaleConfig, Calendar as WixCalendar } from 'react-native-calendars';
 
 import { colors } from 'styles';
@@ -9,9 +9,13 @@ import { colors } from 'styles';
 import styles from './styles'
 
 export default class Calendar extends Component {
-  static propTypes = {};
+  static propTypes = {
+    containerStyle: PropTypes.shape(),
+  };
 
-  static defaultProps = {};
+  static defaultProps = {
+    containerStyle: null,
+  };
 
   state = {
     date: '',
@@ -35,8 +39,11 @@ export default class Calendar extends Component {
   };
 
   render() {
+    const containerStyle = this.props.containerStyle
+      ? [styles.container, this.props.containerStyle]
+      : styles.container;
     return (
-      <View style={styles.container}>
+      <Animated.View style={containerStyle}>
         <WixCalendar
           current={this.state.date}
           // minDate='2016-05-01'
@@ -59,7 +66,7 @@ export default class Calendar extends Component {
           }}
           theme={styles.calendarTheme}
         />
-      </View>
+      </Animated.View>
     );
   }
 }

@@ -7,6 +7,8 @@ let styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: metrics.basePadding * 3,
     paddingVertical: metrics.basePadding,
+    position: 'absolute',
+    top: 0,
   },
   markerContainer: {
     height: 25,
