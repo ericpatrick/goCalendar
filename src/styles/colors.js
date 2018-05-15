@@ -4,6 +4,10 @@ export default {
   darkPurple: '#8B48B8',
   blue: '#5ECCE3',
   green: '#00D9B1',
+  gray: '#a3a3a3',
+  lightGray: '#EEE',
+  darkGray: '#999',
+  darkerGray: '#555',
 
   primary: '#A55BD7',
   secondary: '#49C7A7',

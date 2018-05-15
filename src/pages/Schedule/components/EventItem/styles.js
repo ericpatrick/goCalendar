@@ -15,7 +15,15 @@ const styles = StyleSheet.create({
     ...general.box,
     height: 80,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+  },
+  itemName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  itemPlace: {
+    fontSize: 12,
+    color: colors.gray,
   },
   shareButton: {
     ...general.box,

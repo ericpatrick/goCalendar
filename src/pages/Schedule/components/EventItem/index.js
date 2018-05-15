@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Animated, PanResponder, Text, View } from 'react-native';
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from './styles';
 
@@ -81,8 +81,8 @@ export default class EventItem extends Component {
           ]}
         >
           <View style={styles.itemContent}>
-            <Text>{data.name}</Text>
-            <Text>{data.place}</Text>
+            <Text style={styles.itemName}>{data.name}</Text>
+            <Text style={styles.itemPlace}>{data.place}</Text>
           </View>
         </Animated.View>
       </View>

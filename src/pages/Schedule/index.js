@@ -8,6 +8,7 @@ import AccountButton from './components/AccountButton';
 import HeaderTitle from './components/HeaderTitle';
 import Calendar from './components/Calendar';
 import EventList from './components/EventList';
+import NewEvent from './components/NewEvent';
 
 import styles from './styles';
 
@@ -45,6 +46,7 @@ export default class Schedule extends Component {
             },
           }])}
         />
+        <NewEvent />
       </View>
     );
   }

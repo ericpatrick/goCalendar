@@ -6,5 +6,6 @@ export default {
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
     padding: metrics.basePadding * 2,
+    height: 54,
   },
 };
