@@ -31,13 +31,6 @@ const styles = StyleSheet.create({
     marginBottom: metrics.baseMargin,
   },
   datePickerContainer: {
-    // borderRadius: 5,
-    // borderWidth: 1,
-    // borderColor: colors.black,
-    // flex: 1,
-    // marginBottom: metrics.baseMargin,
-    // height: 34,
-    // justifyContent: 'center',
     flex: 1,
     marginBottom: 0,
     padding: 0,
@@ -61,7 +54,6 @@ const styles = StyleSheet.create({
     borderRadius: metrics.baseRadius,
     borderWidth: 1,
     backgroundColor: colors.lightGray,
-    // color: colors.darkerGray,
   },
   buttonsContainer: {
     width: '100%',

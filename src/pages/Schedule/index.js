@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-import { View, Animated, Text, ScrollView } from 'react-native';
+import { View, Animated } from 'react-native';
 
 import AddButton from './components/AddButton';
 import AccountButton from './components/AccountButton';
@@ -13,13 +12,13 @@ import NewEvent from './components/NewEvent';
 import styles from './styles';
 
 export default class Schedule extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     headerTitle: <HeaderTitle />,
-    headerLeft: <AddButton />,
-    headerRight: <AccountButton />,
+    headerLeft: <AddButton onPress={() => {}} />,
+    headerRight: <AccountButton onPress={() => navigation.navigate('Account')} />,
     headerStyle: styles.headerStyle,
     headerTitleStyle: styles.headerTitleStyle,
-  };
+  });
 
   static propTypes = {};
 

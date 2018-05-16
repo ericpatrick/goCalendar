@@ -1,7 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors, general, metrics } from 'styles';
-
-const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -32,6 +30,7 @@ const styles = StyleSheet.create({
     bottom: 5,
     left: 0,
     backgroundColor: colors.blue,
+    height: 75,
     width: 80,
     flexDirection: 'row',
     alignItems: 'center',
@@ -44,6 +43,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 0,
     backgroundColor: colors.danger,
+    height: 75,
     width: 80,
     flexDirection: 'row',
     alignItems: 'center',

@@ -24,15 +24,24 @@ export default class EventItem extends Component {
       onMoveShouldSetPanResponderCapture: () => true,
 
       onPanResponderGrant: (e, gestureState) => {
-        const {offsetX} = this.state;
+        const { offsetX } = this.state;
         offsetX.setOffset(offsetX._value);
 
         offsetX.setValue(0);
       },
 
-      onPanResponderMove: Animated.event([null, {
-        dx: this.state.offsetX,
-      }]),
+      // onPanResponderMove: Animated.event([null, {
+      //   dx: this.state.offsetX,
+      // }]),
+
+      onPanResponderMove: (evt, gestureState) => {
+        if (gestureState.dx > 35 || gestureState.dx < -35) {
+          let newX = (gestureState.dx >= 0)
+            ? gestureState.dx - 35
+            : gestureState.dx + 35;
+          this.state.offsetX.setValue(newX);
+        }
+      },
 
       onPanResponderRelease: () => {
         console.tron.log(this.state.offsetX._value);
@@ -41,7 +50,7 @@ export default class EventItem extends Component {
         if (offsetValue < 0) {
           Animated.spring(this.state.offsetX, {
             toValue: offsetValue < -80 ? -110 : 0,
-            bounciness: 10,
+            bounciness: 5,
           }).start();
         }
 

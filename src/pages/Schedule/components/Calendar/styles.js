@@ -46,7 +46,6 @@ styles = {
         width: 32,
         textAlign: 'center',
         fontSize: 13,
-        // fontFamily: 'monospace',
         color: colors.white,
         fontWeight: 'bold',
       },

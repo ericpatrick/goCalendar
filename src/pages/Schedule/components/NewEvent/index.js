@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   View,
@@ -27,7 +26,7 @@ export default class NewEvent extends Component {
     eventPlace: '',
 
     loading: false,
-    visible: true,
+    visible: false,
   };
 
   cancelInput = () => {
@@ -61,7 +60,7 @@ export default class NewEvent extends Component {
         animationType="fade"
         visible={visible}
         transparent
-        // onRequestClose={() => toggleModal()}
+        onRequestClose={() => {}}
       >
         <View style={styles.overlay} />
         <View style={styles.container}>
@@ -84,7 +83,7 @@ export default class NewEvent extends Component {
                 placeholderText: styles.placeholderText,
                 dateText: styles.dateText,
               }}
-              onDateChange={(date) => { this.setState({ date })} }
+              onDateChange={(date) => { this.setState({ date }); }}
             />
           </View>
           <TextInput
