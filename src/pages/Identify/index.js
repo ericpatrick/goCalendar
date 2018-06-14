@@ -37,9 +37,9 @@ class Identify extends Component {
   componentWillReceiveProps(nextProps) {
     const { phoneStatus } = nextProps.user;
     if (phoneStatus === PhoneStatus.REGISTERED) {
-      this.changeToToute('Login')
+      this.changeToToute('Login');
     } else if (phoneStatus === PhoneStatus.UNREGISTERED) {
-      this.changeToToute('Register')
+      this.changeToToute('Register');
     }
   }
 

@@ -52,7 +52,7 @@ class Register extends Component {
 
   register = () => {
     this.props.createUser({
-      phone: this.props.phoneNumber,
+      username: this.props.phoneNumber,
       fullName: this.state.fullName,
       password: this.state.password,
     });

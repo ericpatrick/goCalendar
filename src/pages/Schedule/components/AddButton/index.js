@@ -1,22 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { Creators as EventsCreators } from 'store/ducks/events';
 import { colors } from 'styles';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 
 
-const AddButton = ({ onPress }) => (
-  <TouchableOpacity style={styles.container} onPress={onPress}>
+const AddButton = ({ toggleNewEventVisible }) => (
+  <TouchableOpacity style={styles.container} onPress={() => toggleNewEventVisible()}>
     <Icon name="plus" size={12} color={colors.white} />
   </TouchableOpacity>
 );
 
-AddButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-};
-
-
-export default AddButton;
+const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
+export default connect(null, mapDispatchToProps)(AddButton);

@@ -29,6 +29,13 @@ export default class Schedule extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <EventList
+          onScroll={Animated.event([{
+            nativeEvent: {
+              contentOffset: { y: this.state.scrollOffset },
+            },
+          }])}
+        />
         <Calendar
           containerStyle={{
             height: this.state.scrollOffset.interpolate({
@@ -37,13 +44,6 @@ export default class Schedule extends Component {
               extrapolate: 'clamp',
             }),
           }}
-        />
-        <EventList
-          onScroll={Animated.event([{
-            nativeEvent: {
-              contentOffset: { y: this.state.scrollOffset },
-            },
-          }])}
         />
         <NewEvent />
       </View>

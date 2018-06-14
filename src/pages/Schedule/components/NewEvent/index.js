@@ -7,15 +7,21 @@ import {
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import { Creators as EventsCreators} from 'store/ducks/events';
+import Helpers from 'helpers';
 import { colors } from 'styles';
 
 import styles from './styles';
 
-export default class NewEvent extends Component {
+class NewEvent extends Component {
   static propTypes = {};
 
   static defaultProps = {};
@@ -26,11 +32,25 @@ export default class NewEvent extends Component {
     eventPlace: '',
 
     loading: false,
-    visible: false,
   };
 
   cancelInput = () => {
-    this.setState({ visible: false });
+    this.props.toggleNewEventVisible();
+  };
+
+  addEvent = () => {
+    const { date, eventName, eventPlace } = this.state;
+    if (date.length > 0 && eventName.length > 0 && eventPlace.length > 0) {
+      // const key = Helpers.getStorageKey('token');
+      // const uid = await AsyncStorage.getItem(key);
+      console.tron.log(date);
+      console.tron.log(moment(date).format('YYYY-MM-DD HH:mm'));
+      this.props.addEvent({
+        date,
+        name: eventName,
+        place: eventPlace,
+      });
+    }
   };
 
   renderButtons() {
@@ -38,7 +58,7 @@ export default class NewEvent extends Component {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={[styles.button, styles.saveButton]}
-          onPress={() => this.saveUser()}
+          onPress={() => this.addEvent()}
         >
           <Text style={styles.buttonLabel}>Criar evento</Text>
         </TouchableOpacity>
@@ -53,12 +73,11 @@ export default class NewEvent extends Component {
   }
 
   render() {
-    const { loading, visible } = this.state;
-    console.tron.log(this.state.timeIcon);
+    const { loading } = this.state;
     return (
       <Modal
         animationType="fade"
-        visible={visible}
+        visible={this.props.visible}
         transparent
         onRequestClose={() => {}}
       >
@@ -72,7 +91,7 @@ export default class NewEvent extends Component {
               date={this.state.date}
               mode="datetime"
               placeholder="Selecione data e horário"
-              format="YYYY-MM-DD"
+              format="YYYY-MM-DD HH:mm"
               // minDate="2016-05-01"
               // maxDate="2016-06-01"
               confirmBtnText="Confirm"
@@ -83,7 +102,7 @@ export default class NewEvent extends Component {
                 placeholderText: styles.placeholderText,
                 dateText: styles.dateText,
               }}
-              onDateChange={(date) => { this.setState({ date }); }}
+              onDateChange={(date) => { this.setState({ ...this.state, date }); }}
             />
           </View>
           <TextInput
@@ -94,7 +113,7 @@ export default class NewEvent extends Component {
             placeholderTextColor={colors.darkGray}
             underlineColorAndroid="transparent"
             value={this.state.eventName}
-            onChangeText={eventName => this.setState({ eventName })}
+            onChangeText={eventName => this.setState({ ...this.state, eventName })}
           />
           <TextInput
             style={styles.input}
@@ -104,7 +123,7 @@ export default class NewEvent extends Component {
             placeholderTextColor={colors.darkGray}
             underlineColorAndroid="transparent"
             value={this.state.eventPlace}
-            onChangeText={eventPlace => this.setState({ eventPlace })}
+            onChangeText={eventPlace => this.setState({ ...this.state, eventPlace })}
           />
 
           { loading
@@ -117,3 +136,9 @@ export default class NewEvent extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  visible: state.events.newEventVisible,
+});
+const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(NewEvent);

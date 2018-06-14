@@ -42,11 +42,10 @@ export default function auth(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  authenticate: (phone, password) => ({
+  authenticate: (user) => ({
     type: Types.AUTHENTICATE,
     payload: {
-      phone,
-      password,
+      user
     }
   }),
 

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Animated, PanResponder, Text, View } from 'react-native';
+import { Animated, PanResponder, Text, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as EventsCreators } from 'store/ducks/events';
 
 import styles from './styles';
 
-export default class EventItem extends Component {
+class EventItem extends Component {
   static propTypes = {};
 
   static defaultProps = {};
@@ -44,7 +47,6 @@ export default class EventItem extends Component {
       },
 
       onPanResponderRelease: () => {
-        console.tron.log(this.state.offsetX._value);
         const { offsetX } = this.state;
         const offsetValue = offsetX._value
         if (offsetValue < 0) {
@@ -66,6 +68,10 @@ export default class EventItem extends Component {
     });
   }
 
+  onDelete = id => {
+    this.props.removeEvent(id);
+  };
+
   render() {
     const { data } = this.props;
     return (
@@ -73,9 +79,9 @@ export default class EventItem extends Component {
         <View style={styles.shareButton}>
           <Icon name="share" size={20} color="#FFF" />
         </View>
-        <View style={styles.deleteButton}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => this.onDelete(data.id)}>
           <Icon name="close" size={20} color="#FFF" />
-        </View>
+        </TouchableOpacity>
         <Animated.View
           {...this._panResponder.panHandlers}
           style={[
@@ -98,3 +104,6 @@ export default class EventItem extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
+export default connect(null, mapDispatchToProps)(EventItem);

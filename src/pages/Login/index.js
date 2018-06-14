@@ -85,6 +85,7 @@ class Login extends Component {
           />
         </View>
         <TouchableOpacity
+          id="sign-in-button"
           style={styles.button}
           onPress={() => this.login()}
         >

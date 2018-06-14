@@ -1,47 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { FlatList, AsyncStorage } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { FlatList } from 'react-native';
+import { Creators as EventsCreators } from 'store/ducks/events';
+import Helpers from 'helpers';
 
 import EventItem from 'pages/Schedule/components/EventItem';
 
 import styles from './styles';
 
-const data = [
-  {
-    id: 1,
-    date: '2018-05-01',
-    name: 'Estudar React Native',
-    place: 'Casa',
-  },
-  {
-    id: 2,
-    date: '2018-05-01',
-    name: 'Comprar livro',
-    place: 'Centro de Goiânia',
-  },
-  {
-    id: 3,
-    date: '2018-05-01',
-    name: 'Pesquisar terno',
-    place: 'Campinas',
-  },
-  {
-    id: 4,
-    date: '2018-05-01',
-    name: 'Abastecer o carro',
-    place: 'Campinas',
-  },
-  {
-    id: 5,
-    date: '2018-05-05',
-    name: 'Abastecer a moto',
-    place: 'Campinas',
-  },
-];
 
-
-export default class EventList extends Component {
+class EventList extends Component {
   static propTypes = {
     onScroll: PropTypes.func,
   };
@@ -52,10 +23,15 @@ export default class EventList extends Component {
 
   state = {};
 
+  componentWillMount() {
+    this.props.loadEvents();
+  }
+
   render() {
+    const { currentEvents } = this.props;
     return (
       <FlatList
-        data={data}
+        data={currentEvents}
         renderItem={({ item }) => <EventItem data={item} />}
         keyExtractor={item => String(item.id)}
         scrollEventThrottle={16}
@@ -66,3 +42,9 @@ export default class EventList extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  currentEvents: state.events.currentEvents,
+});
+const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(EventList);

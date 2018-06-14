@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 
 import { View, Animated } from 'react-native';
 import { LocaleConfig, Calendar as WixCalendar } from 'react-native-calendars';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as EventsCreators } from 'store/ducks/events';
 
 import { colors } from 'styles';
 
 import styles from './styles'
 
-export default class Calendar extends Component {
+class Calendar extends Component {
   static propTypes = {
     containerStyle: PropTypes.shape(),
   };
@@ -33,29 +36,36 @@ export default class Calendar extends Component {
   }
 
   onDayPress = (day) => {
-    this.setState({
-      date: day.dateString,
-    });
+    console.tron.log(day);
+    const date = day.dateString;
+    this.setState({ date });
+
+    this.props.changeCurrentDate(date);
   };
 
   render() {
-    const containerStyle = this.props.containerStyle
-      ? [styles.container, this.props.containerStyle]
+    const { currentDate } = this.props;
+    let { containerStyle } = this.props;
+
+    containerStyle = containerStyle
+      ? [styles.container, containerStyle]
       : styles.container;
+
+    const date = currentDate.format('YYYY-MM-DD');
+
     return (
       <Animated.View style={containerStyle}>
         <WixCalendar
-          current={this.state.date}
+          current={date}
           // minDate='2016-05-01'
           // maxDate='2016-06-30'
           onDayPress={this.onDayPress}
-          onDayLongPress={(day) => {console.log('selected day', day)}}
-          monthFormat='MMMM'
-          onMonthChange={(month) => {console.log('month changed', month)}}
+          monthFormat="MMMM"
+          onMonthChange={(month) => { console.log(`month changed: ${month}`); }}
           hideArrows={false}
-          markingType={'custom'}
+          markingType="custom"
           markedDates={{
-            [this.state.date]: {
+            [date]: {
               selected: true,
               disableTouchEvent: true,
               customStyles: {
@@ -70,3 +80,9 @@ export default class Calendar extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  currentDate: state.events.currentDate,
+});
+const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);
