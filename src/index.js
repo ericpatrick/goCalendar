@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Provider } from 'react-redux';
 import createRootNavigator from 'routes';
 import Parse from 'parse/react-native';
 
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, View } from 'react-native';
 import Helpers from 'helpers';
 
 import 'config/ReactotronConfig';
@@ -11,6 +11,8 @@ import 'config/DevtoolsConfig';
 
 import store from 'store';
 import { Creators as AuthCreators} from 'store/ducks/auth';
+
+import Notification from 'components/Notification';
 
 export default class App extends Component {
   static propTypes = {};
@@ -232,7 +234,10 @@ export default class App extends Component {
 
     return (
       <Provider store={store}>
-        <Routes />
+        <Fragment>
+          <Routes />
+          <Notification />
+        </Fragment>
       </Provider>
     );
   }

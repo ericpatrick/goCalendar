@@ -36,7 +36,6 @@ class Calendar extends Component {
   }
 
   onDayPress = (day) => {
-    console.tron.log(day);
     const date = day.dateString;
     this.setState({ date });
 

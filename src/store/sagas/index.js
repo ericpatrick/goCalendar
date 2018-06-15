@@ -4,7 +4,7 @@ import { Types as UserTypes } from 'store/ducks/user';
 import { Types as AuthTypes } from 'store/ducks/auth';
 import { Types as EventsTypes } from 'store/ducks/events';
 
-import { checkPhone, createUser } from './user';
+import { checkPhone, createUser, loadUser, saveUser } from './user';
 import { authenticate } from './auth';
 import { addEvent, loadEvents, changeCurrentDate, removeEvent } from './events';
 
@@ -17,5 +17,7 @@ export default function* rootSaga() {
     takeLatest(EventsTypes.LOAD_EVENTS, loadEvents),
     takeLatest(EventsTypes.CHANGE_CURRENT_DATE, changeCurrentDate),
     takeLatest(EventsTypes.REMOVE_EVENT, removeEvent),
+    takeLatest(UserTypes.LOAD_USER, loadUser),
+    takeLatest(UserTypes.SAVE_USER, saveUser),
   ]);
 }

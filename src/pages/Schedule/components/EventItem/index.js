@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
-import { Animated, PanResponder, Text, View, TouchableOpacity } from 'react-native';
+import { Animated, PanResponder, Text, View, TouchableOpacity, Share  } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -72,13 +73,23 @@ class EventItem extends Component {
     this.props.removeEvent(id);
   };
 
+  onShare = data => {
+    const {dateTime, name, place} = data;
+    Share.share({
+      message: `${moment(dateTime).format('DD/MM/YYYY HH:mm')} - ${name} - ${place}`,
+    }, {
+      // Android only:
+      dialogTitle: 'Share your event',
+    })
+  };
+
   render() {
     const { data } = this.props;
     return (
       <View style={styles.container}>
-        <View style={styles.shareButton}>
+        <TouchableOpacity style={styles.shareButton} onPress={() => this.onShare(data)}>
           <Icon name="share" size={20} color="#FFF" />
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.deleteButton} onPress={() => this.onDelete(data.id)}>
           <Icon name="close" size={20} color="#FFF" />
         </TouchableOpacity>

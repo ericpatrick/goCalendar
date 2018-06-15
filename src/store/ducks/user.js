@@ -7,11 +7,18 @@ export const Types = {
   CREATE_USER: 'user/CREATE_USER',
   CREATE_USER_SUCCESS: 'user/CREATE_USER_SUCCESS',
   CREATE_USER_FAIL: 'user/CREATE_USER_FAIL',
+  LOAD_USER: 'user/LOAD_USER',
+  LOAD_USER_SUCCESS: 'user/LOAD_USER_SUCCESS',
+  LOAD_USER_FAIL: 'user/LOAD_USER_FAIL',
+  SAVE_USER: 'user/SAVE_USER',
+  SAVE_USER_SUCCESS: 'user/SAVE_USER_SUCCESS',
+  SAVE_USER_FAIL: 'user/SAVE_USER_FAIL',
 };
 
 const INITIAL_STATE = {
   phoneNumber: '',
   phoneStatus: PhoneStatus.NOT_CHECKED,
+  fullName: '',
   loading: false,
   error: '',
 };
@@ -19,6 +26,9 @@ const INITIAL_STATE = {
 export default function user(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.CHECK_PHONE:
+    case Types.CREATE_USER:
+    case Types.LOAD_USER:
+    case Types.SAVE_USER:
       return {
         ...state,
         loading: true,
@@ -39,12 +49,6 @@ export default function user(state = INITIAL_STATE, action) {
         error: action.payload.error,
         loading: false,
       };
-    case Types.CREATE_USER:
-      return {
-        ...state,
-        loading: true,
-        error: '',
-      };
     case Types.CREATE_USER_SUCCESS:
       return {
         ...state,
@@ -52,10 +56,26 @@ export default function user(state = INITIAL_STATE, action) {
         error: '',
       };
     case Types.CREATE_USER_FAIL:
+    case Types.LOAD_USER_FAIL:
+    case Types.SAVE_USER_FAIL:
       return {
         ...state,
         loading: false,
         error: action.payload.error,
+      };
+    case Types.LOAD_USER_SUCCESS:
+      return {
+        ...state,
+        fullName: action.payload.currentUser.fullName,
+        loading: false,
+        error: '',
+      };
+    case Types.SAVE_USER_SUCCESS:
+      return {
+        ...state,
+        fullName: action.payload.userUpdated.fullName,
+        loading: false,
+        error: '',
       };
     default:
       return state;
@@ -101,6 +121,45 @@ export const Creators = {
 
   createUserFail: error => ({
     type: Types.CREATE_USER_FAIL,
+    payload: {
+      error,
+    },
+  }),
+
+  loadUser: () => ({
+    type: Types.LOAD_USER,
+  }),
+
+  loadUserSuccess: currentUser => ({
+    type: Types.LOAD_USER_SUCCESS,
+    payload: {
+      currentUser,
+    },
+  }),
+
+  loadUserFail: error => ({
+    type: Types.LOAD_USER_SUCCESS,
+    payload: {
+      error,
+    },
+  }),
+
+  saveUser: params => ({
+    type: Types.SAVE_USER,
+    payload: {
+      params,
+    },
+  }),
+
+  saveUserSuccess: userUpdated => ({
+    type: Types.SAVE_USER_SUCCESS,
+    payload: {
+      userUpdated,
+    },
+  }),
+
+  saveUserFail: error => ({
+    type: Types.SAVE_USER_FAIL,
     payload: {
       error,
     },

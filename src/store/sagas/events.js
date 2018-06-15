@@ -22,14 +22,12 @@ export function* loadEvents() {
     query.lessThanOrEqualTo('dateTime', endDate);
     // query.ascending('dateTime');
     const resp = yield call([query, query.find]);
-    console.tron.log(resp);
     const listEvents = resp.map(event =>({
       id: event.id,
       dateTime: event.get('dateTime'),
       name: event.get('name'),
       place: event.get('place'),
     }));
-    console.tron.log(listEvents);
 
     yield put(EventsCreators.loadEventsSuccess(listEvents));
   } catch (error) {
@@ -45,7 +43,6 @@ export function* addEvent(action) {
     const userObj = Parse.User;
     const user = yield call([userObj, userObj.currentAsync]);
     const { date, name, place } = action.payload.event;
-    console.tron.log(date);
     const dateTime = moment.parseZone(date).toDate();
 
     event.set('dateTime', dateTime);

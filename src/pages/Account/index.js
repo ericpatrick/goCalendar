@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, Text, TextInput, TouchableOpacity, Divi } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as UserCreators } from 'store/ducks/user';
 
 import { colors } from 'styles';
 import styles from './styles'
 
-export default class Account extends Component {
+class Account extends Component {
   static navigationOptions = {
     title: 'SCHEDULER',
     headerTintColor: colors.white,
@@ -18,10 +21,40 @@ export default class Account extends Component {
 
   static defaultProps = {};
 
+  static getDerivedStateFromProps(props, state) {
+    const { fullName } = props;
+    if (fullName !== state.fullName) {
+      return {
+        ...state,
+        fullName,
+      };
+    }
+
+    return state;
+  }
+
   state = {
-    username: '',
+    fullName: '',
     password: '',
     passwordConfirmation: '',
+  };
+
+  componentDidMount() {
+    this.props.loadUser();
+  }
+
+  save = () => {
+    const { fullName, password, passwordConfirmation} = this.state;
+    const params = {
+      fullName,
+    };
+    if (password) {
+      if (password === passwordConfirmation) {
+        params.password = password;
+      } else return;
+    }
+
+    this.props.saveUser(params);
   };
 
   render() {
@@ -35,13 +68,12 @@ export default class Account extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            keyboardType="numeric"
             placeholder="Qual seu nome completo?"
             style={styles.input}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
-            value={this.state.username}
-            onChangeText={text => this.setState({ username: text })}
+            value={this.state.fullName}
+            onChangeText={text => this.setState({ fullName: text })}
           />
         </View>
         <View style={styles.divider} />
@@ -54,6 +86,7 @@ export default class Account extends Component {
             style={styles.input}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
+            secureTextEntry
             value={this.state.password}
             onChangeText={text => this.setState({ password: text })}
           />
@@ -74,7 +107,7 @@ export default class Account extends Component {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.register()}
+          onPress={() => this.save()}
         >
           <Text style={styles.buttonLabel}>Alterar informações</Text>
         </TouchableOpacity>
@@ -82,3 +115,9 @@ export default class Account extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  fullName: state.user.fullName,
+});
+const mapDispatchToProps = dispatch => bindActionCreators(UserCreators, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(Account);

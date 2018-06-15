@@ -43,8 +43,6 @@ class NewEvent extends Component {
     if (date.length > 0 && eventName.length > 0 && eventPlace.length > 0) {
       // const key = Helpers.getStorageKey('token');
       // const uid = await AsyncStorage.getItem(key);
-      console.tron.log(date);
-      console.tron.log(moment(date).format('YYYY-MM-DD HH:mm'));
       this.props.addEvent({
         date,
         name: eventName,
