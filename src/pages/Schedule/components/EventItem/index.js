@@ -21,11 +21,16 @@ class EventItem extends Component {
 
   componentWillMount() {
     this._panResponder = PanResponder.create({
-      onPanResponderTerminationRequest: () => false,
+      onPanResponderTerminationRequest: () => true,
 
-      onMoveShouldSetResponderCapture: () => true,
-      // onMoveShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      // onMoveShouldSetPanResponderCapture: () => true,
+      // onStartShouldSetPanResponderCapture: () => true,
+      onShouldBlockNativeResponder: (evt, gestureState) => {
+        // Returns whether this component should block native components from becoming the JS
+        // responder. Returns true by default. Is currently only supported on android.
+        return false;
+      },
 
       onPanResponderGrant: (e, gestureState) => {
         const { offsetX } = this.state;
@@ -34,22 +39,39 @@ class EventItem extends Component {
         offsetX.setValue(0);
       },
 
-      // onPanResponderMove: Animated.event([null, {
-      //   dx: this.state.offsetX,
-      // }]),
-
       onPanResponderMove: (evt, gestureState) => {
-        if (gestureState.dx > 35 || gestureState.dx < -35) {
-          let newX = (gestureState.dx >= 0)
-            ? gestureState.dx - 35
-            : gestureState.dx + 35;
+        const delay = 35;
+        if (gestureState.dx > delay || gestureState.dx < delay * -1) {
+          const newX = (gestureState.dx >= 0)
+            ? gestureState.dx - delay
+            : gestureState.dx + delay;
           this.state.offsetX.setValue(newX);
         }
       },
 
       onPanResponderRelease: () => {
         const { offsetX } = this.state;
-        const offsetValue = offsetX._value
+        const offsetValue = offsetX._value;
+        if (offsetValue < 0) {
+          Animated.spring(this.state.offsetX, {
+            toValue: offsetValue < -80 ? -110 : 0,
+            bounciness: 5,
+          }).start();
+        }
+
+        if (offsetValue >= 0) {
+          Animated.spring(this.state.offsetX, {
+            toValue: offsetValue > 80 ? 110 : 0,
+            bounciness: 10,
+          }).start();
+        }
+
+        offsetX.flattenOffset();
+      },
+
+      onPanResponderTerminate: () => {
+        const { offsetX } = this.state;
+        const offsetValue = offsetX._value;
         if (offsetValue < 0) {
           Animated.spring(this.state.offsetX, {
             toValue: offsetValue < -80 ? -110 : 0,
@@ -69,12 +91,12 @@ class EventItem extends Component {
     });
   }
 
-  onDelete = id => {
+  onDelete = (id) => {
     this.props.removeEvent(id);
   };
 
-  onShare = data => {
-    const {dateTime, name, place} = data;
+  onShare = (data) => {
+    const { dateTime, name, place } = data;
     Share.share({
       message: `${moment(dateTime).format('DD/MM/YYYY HH:mm')} - ${name} - ${place}`,
     }, {

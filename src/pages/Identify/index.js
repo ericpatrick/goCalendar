@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,6 +22,7 @@ class Identify extends Component {
   static propTypes = {
     user: PropTypes.shape({
       phoneStatus: PropTypes.number.isRequired,
+      loading: PropTypes.bool.isRequired,
     }).isRequired,
     checkPhone: PropTypes.func.isRequired,
     navigation: PropTypes.shape({
@@ -57,9 +58,20 @@ class Identify extends Component {
     this.props.checkPhone(this.state.phone);
   };
 
+  renderButton = () => {
+    const { loading } = this.props.user;
+    return loading
+      ? (<ActivityIndicator size="large" color={colors.transparentWhite} />)
+      : (
+        <TouchableOpacity style={styles.button} onPress={() => this.checkPhone()}>
+          <Text style={styles.buttonLabel}>Entrar</Text>
+        </TouchableOpacity>
+      );
+  };
+
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled keyboardVerticalOffset={-200}>
         <Text style={styles.title}>SCHEDULER</Text>
         <View style={styles.inputContainer}>
           <Icon name="phone" size={20} color={colors.transparentWhite} style={styles.icon} />
@@ -75,13 +87,12 @@ class Identify extends Component {
             onChangeText={text => this.setState({ phone: text })}
           />
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.checkPhone()}
-        >
-          <Text style={styles.buttonLabel}>Entrar</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.buttonContainer}>
+          {
+            this.renderButton()
+          }
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }

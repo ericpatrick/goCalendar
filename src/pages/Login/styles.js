@@ -40,12 +40,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
+  buttonContainer: {
+    marginTop: metrics.baseMargin * 2,
+    width: '100%',
+  },
+
   button: {
     height: 54,
-    width: '100%',
     backgroundColor: colors.secondary,
     borderRadius: metrics.baseRadius,
-    marginTop: metrics.baseMargin * 2,
     justifyContent: 'center',
   },
 

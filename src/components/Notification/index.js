@@ -9,9 +9,18 @@ import { Creators as NotificationCreators } from 'store/ducks/notification';
 import styles from './styles';
 
 class Notification extends Component {
-  static propTypes = {};
+  static propTypes = {
+    message: PropTypes.string.isRequired,
+    isError: PropTypes.bool.isRequired,
+    duration: PropTypes.number.isRequired,
+    modalMode: PropTypes.bool.isRequired,
+    embedded: PropTypes.bool,
+    clear: PropTypes.func.isRequired,
+  };
 
-  static defaultProps = {};
+  static defaultProps = {
+    embedded: false,
+  };
 
   state = {
     translateY: new Animated.Value(0),
@@ -38,10 +47,11 @@ class Notification extends Component {
   };
 
   render() {
-    let containerStyle = [styles.container];
+    const { isError, message, embedded, modalMode } = this.props;
+    const containerStyle = [styles.container];
 
-    if (this.props.isError) {
-      containerStyle = containerStyle.push(styles.danger);
+    if (isError) {
+      containerStyle.push(styles.danger);
     }
 
     containerStyle.push({
@@ -50,9 +60,7 @@ class Notification extends Component {
       }],
     });
 
-    console.tron.log('COMPONENT: getDerivedStateFromProps');
-    console.tron.log(this.props);
-    if (this.props.message) {
+    if (message && embedded === modalMode) {
       this.showMessage();
     }
 
@@ -65,11 +73,12 @@ class Notification extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isError, message, duration } = state.notification;
+  const { isError, message, duration, modalMode } = state.notification;
   return {
     message,
     isError,
-    duration
+    duration,
+    modalMode,
   };
 };
 const mapDIspatchToProps = dispatch => bindActionCreators(NotificationCreators, dispatch);

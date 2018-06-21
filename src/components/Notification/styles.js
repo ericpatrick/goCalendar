@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingHorizontal: metrics.baseMargin * 2,
     // paddingVertical: metrics.baseMargin,
+    zIndex: 99999999,
   },
 
   content: {

@@ -55,11 +55,13 @@ const styles = StyleSheet.create({
     marginTop: metrics.baseMargin,
     marginHorizontal: metrics.baseMargin * 2,
   },
+  buttonContainer: {
+    marginTop: metrics.baseMargin * 2,
+  },
   button: {
     height: 54,
     backgroundColor: colors.secondary,
     borderRadius: metrics.baseRadius,
-    marginTop: metrics.baseMargin * 2,
     marginHorizontal: metrics.baseMargin * 2,
     justifyContent: 'center',
   },

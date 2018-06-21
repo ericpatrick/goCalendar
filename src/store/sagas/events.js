@@ -1,12 +1,9 @@
 import Parse from 'parse/react-native';
 import moment from 'moment';
-import { AsyncStorage } from 'react-native';
-import { eventChannel } from 'redux-saga';
-import { take, call, put, select } from 'redux-saga/effects';
-
-import Helpers from 'helpers';
+import { call, put, select } from 'redux-saga/effects';
 
 import { Creators as EventsCreators } from 'store/ducks/events';
+import { Creators as NotificationCreators } from 'store/ducks/notification';
 
 export function* loadEvents() {
   try {
@@ -17,10 +14,9 @@ export function* loadEvents() {
 
     const Events = Parse.Object.extend('Events');
     const query = new Parse.Query(Events);
-    // query.equalTo("playerName", "Dan Stemkoski");
     query.greaterThanOrEqualTo('dateTime', startDate);
     query.lessThanOrEqualTo('dateTime', endDate);
-    // query.ascending('dateTime');
+    query.ascending('dateTime');
     const resp = yield call([query, query.find]);
     const listEvents = resp.map(event =>({
       id: event.id,
@@ -31,7 +27,12 @@ export function* loadEvents() {
 
     yield put(EventsCreators.loadEventsSuccess(listEvents));
   } catch (error) {
-    yield put(EventsCreators.loadEventsFail('Falha ao carregar os eventos'));
+    const message = 'Falha ao carregar os eventos';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(EventsCreators.loadEventsFail(message));
   }
 }
 
@@ -43,19 +44,39 @@ export function* addEvent(action) {
     const userObj = Parse.User;
     const user = yield call([userObj, userObj.currentAsync]);
     const { date, name, place } = action.payload.event;
-    const dateTime = moment.parseZone(date).toDate();
+    if (date.length > 0 && name.length > 0 && place.length > 0) {
+      const dateTime = moment.parseZone(date).toDate();
 
-    event.set('dateTime', dateTime);
-    event.set('name', name);
-    event.set('place', place);
-    event.setACL(new Parse.ACL(user));
+      event.set('dateTime', dateTime);
+      event.set('name', name);
+      event.set('place', place);
+      event.setACL(new Parse.ACL(user));
 
-    yield call([event, event.save]);
+      yield call([event, event.save]);
 
-    yield put(EventsCreators.toggleNewEventVisible());
-    yield put(EventsCreators.loadEvents());
+      yield put(EventsCreators.toggleNewEventVisible());
+      yield put(EventsCreators.loadEvents());
+      yield put(NotificationCreators.show({
+        message: 'Evento adicionado com sucesso!',
+      }));
+    } else {
+      const message = 'Para criar um novo evento é necessário preencher todos os campos';
+      yield put(NotificationCreators.show({
+        message,
+        isError: true,
+        duration: 4000,
+        modalMode: true,
+      }));
+      yield put(EventsCreators.addEventFail(message));
+    }
   } catch (error) {
-    yield put(EventsCreators.addEventFail('Erro ao adicionar evento'));
+    const message = 'Erro ao adicionar evento';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+      modalMode: true,
+    }));
+    yield put(EventsCreators.addEventFail(message));
   }
 }
 
@@ -74,6 +95,11 @@ export function* removeEvent(action) {
 
     yield put(EventsCreators.loadEvents());
   } catch (error) {
-    yield put(EventsCreators.removeEventFail('Erro ao remover evento'));
+    const message = 'Erro ao remover evento';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(EventsCreators.removeEventFail(message));
   }
 }

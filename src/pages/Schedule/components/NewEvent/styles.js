@@ -5,10 +5,12 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: colors.transparentBlack,
+    zIndex: -1,
   },
   container: {
     position: 'absolute',
-    top: (metrics.screenHeight / 2) - 100,
+    // top: (metrics.screenHeight / 2) - 100,
+    top: '20%',
     left: 20,
     width: metrics.screenWidth - 40,
     backgroundColor: colors.white,

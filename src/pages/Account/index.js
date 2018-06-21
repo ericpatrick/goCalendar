@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Parse from 'parse/react-native';
 
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as UserCreators } from 'store/ducks/user';
+import { Creators as NotificationCreators } from 'store/ducks/notification';
 
 import { colors } from 'styles';
-import styles from './styles'
+import styles from './styles';
+
+import LogoutButton from './components/LogoutButton'
 
 class Account extends Component {
   static navigationOptions = {
@@ -16,13 +20,22 @@ class Account extends Component {
     headerTintColor: colors.white,
     headerStyle: styles.headerStyle,
     headerTitleStyle: styles.headerTitleStyle,
+    headerRight: <LogoutButton />,
   };
-  static propTypes = {};
+  static propTypes = {
+    user: PropTypes.shape({
+      fullName: PropTypes.string,
+      loading: PropTypes.bool,
+    }).isRequired,
+    loadUser: PropTypes.func.isRequired,
+    saveUser: PropTypes.func.isRequired,
+    show: PropTypes.func.isRequired,
+  };
 
   static defaultProps = {};
 
   static getDerivedStateFromProps(props, state) {
-    const { fullName } = props;
+    const { fullName } = props.user;
     if (fullName !== state.fullName) {
       return {
         ...state,
@@ -44,17 +57,34 @@ class Account extends Component {
   }
 
   save = () => {
-    const { fullName, password, passwordConfirmation} = this.state;
+    const { fullName, password, passwordConfirmation } = this.state;
     const params = {
       fullName,
     };
     if (password) {
-      if (password === passwordConfirmation) {
+      if (passwordConfirmation && password === passwordConfirmation) {
         params.password = password;
-      } else return;
+      } else {
+        this.props.show({
+          message: 'Confirmação de senha deve ser igual ao campo senha',
+          isError: true,
+        });
+        return;
+      }
     }
 
     this.props.saveUser(params);
+  };
+
+  renderButton = () => {
+    const { loading } = this.props.user;
+    return loading
+      ? (<ActivityIndicator size="large" color={colors.transparentWhite} />)
+      : (
+        <TouchableOpacity style={styles.button} onPress={() => this.save()}>
+          <Text style={styles.buttonLabel}>Alterar informações</Text>
+        </TouchableOpacity>
+      );
   };
 
   render() {
@@ -105,19 +135,21 @@ class Account extends Component {
             onChangeText={text => this.setState({ passwordConfirmation: text })}
           />
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.save()}
-        >
-          <Text style={styles.buttonLabel}>Alterar informações</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          {
+            this.renderButton()
+          }
+        </View>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  fullName: state.user.fullName,
+  user: state.user,
 });
-const mapDispatchToProps = dispatch => bindActionCreators(UserCreators, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  ...UserCreators,
+  ...NotificationCreators,
+}, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

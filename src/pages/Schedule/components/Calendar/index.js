@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment'
 
 import { View, Animated } from 'react-native';
 import { LocaleConfig, Calendar as WixCalendar } from 'react-native-calendars';
@@ -20,10 +21,6 @@ class Calendar extends Component {
     containerStyle: null,
   };
 
-  state = {
-    date: '',
-  };
-
   componentWillMount() {
     LocaleConfig.locales['pt-br'] = {
       monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
@@ -37,9 +34,28 @@ class Calendar extends Component {
 
   onDayPress = (day) => {
     const date = day.dateString;
-    this.setState({ date });
 
     this.props.changeCurrentDate(date);
+  };
+
+  backDate = (substractMonth) => {
+    if (this.props.isDayView) {
+      let { currentDate } = this.props;
+      currentDate = currentDate.subtract(1, 'days').format('YYYY-MM-DD');
+      this.props.changeCurrentDate(currentDate);
+    } else {
+      substractMonth();
+    }
+  };
+
+  nextDate = (addMounth) => {
+    if (this.props.isDayView) {
+      let { currentDate } = this.props;
+      currentDate = currentDate.add(1, 'days').format('YYYY-MM-DD');
+      this.props.changeCurrentDate(currentDate);
+    } else {
+      addMounth();
+    }
   };
 
   render() {
@@ -51,6 +67,9 @@ class Calendar extends Component {
       : styles.container;
 
     const date = currentDate.format('YYYY-MM-DD');
+    const calendarFormat = this.props.isDayView
+      ? 'ddd, d \'de\' MMM'
+      : 'MMMM';
 
     return (
       <Animated.View style={containerStyle}>
@@ -59,9 +78,12 @@ class Calendar extends Component {
           // minDate='2016-05-01'
           // maxDate='2016-06-30'
           onDayPress={this.onDayPress}
-          monthFormat="MMMM"
+          monthFormat={calendarFormat}
           onMonthChange={(month) => { console.log(`month changed: ${month}`); }}
           hideArrows={false}
+          disableMonthChange
+          onPressArrowLeft={this.backDate}
+          onPressArrowRight={this.nextDate}
           markingType="custom"
           markedDates={{
             [date]: {

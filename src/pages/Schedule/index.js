@@ -14,7 +14,7 @@ import styles from './styles';
 export default class Schedule extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: <HeaderTitle />,
-    headerLeft: <AddButton onPress={() => {}} />,
+    headerLeft: <AddButton />,
     headerRight: <AccountButton onPress={() => navigation.navigate('Account')} />,
     headerStyle: styles.headerStyle,
     headerTitleStyle: styles.headerTitleStyle,
@@ -24,17 +24,23 @@ export default class Schedule extends Component {
 
   state = {
     scrollOffset: new Animated.Value(0),
+    isCalendarDayView: false,
+  };
+
+  listScroll = (touchEvent) => {
+    const { y } = touchEvent.nativeEvent.contentOffset;
+    const isCalendarDayView = y > 250;
+    this.setState({ isCalendarDayView });
+    const { scrollOffset } = this.state;
+    scrollOffset.setValue(y);
   };
 
   render() {
     return (
       <View style={styles.container}>
         <EventList
-          onScroll={Animated.event([{
-            nativeEvent: {
-              contentOffset: { y: this.state.scrollOffset },
-            },
-          }])}
+          onScroll={this.listScroll}
+          contentOffset={this.state.scrollOffset._value}
         />
         <Calendar
           containerStyle={{
@@ -44,6 +50,7 @@ export default class Schedule extends Component {
               extrapolate: 'clamp',
             }),
           }}
+          isDayView={this.state.isCalendarDayView}
         />
         <NewEvent />
       </View>

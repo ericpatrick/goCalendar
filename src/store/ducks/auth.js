@@ -3,10 +3,12 @@ export const Types = {
   AUTHENTICATE_SUCCESS: 'auth/AUTHENTICATE_SUCCESS',
   AUTHENTICATE_FAIL: 'auth/AUTHENTICATE_FAIL',
   UPDATE_TOKEN: 'auth/UPDATE_TOKEN',
+  CHECK_AUTH: 'auth/CHECK_AUTH',
+  LOGOUT: 'auth/LOGOUT',
 };
 
 const INITIAL_STATE = {
-  token: '',
+  token: null,
   loading: false,
   error: '',
 };
@@ -42,11 +44,12 @@ export default function auth(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  authenticate: (user) => ({
+  authenticate: (phone, password) => ({
     type: Types.AUTHENTICATE,
     payload: {
-      user
-    }
+      phone,
+      password,
+    },
   }),
 
   authenticateSuccess: token => ({
@@ -68,5 +71,13 @@ export const Creators = {
     payload: {
       token,
     }
+  }),
+
+  checkAuth: () => ({
+    type: Types.CHECK_AUTH,
+  }),
+
+  logout: () => ({
+    type: Types.LOGOUT,
   }),
 };

@@ -4,6 +4,16 @@ import Parse from 'parse/react-native';
 import Helpers from 'helpers';
 
 import { Creators as AuthCreators } from 'store/ducks/auth';
+import { Creators as NotificationCreators } from 'store/ducks/notification';
+
+function* getToken() {
+  const key = Helpers.getParseKey('currentUser');
+  const value = yield call([AsyncStorage, AsyncStorage.getItem], key);
+  console.tron.log(value);
+  const user = value ? JSON.parse(value) : null;
+
+  return (user && user.sessionToken) || '';
+}
 
 export function* authenticate(action) {
   try {
@@ -12,13 +22,44 @@ export function* authenticate(action) {
     const user = yield call([userObj, userObj.logIn], phone, password);
 
     const sessionToken = user.get('sessionToken');
-    const key = Helpers.getStorageKey('token');
-    yield call([AsyncStorage, AsyncStorage.setItem], key, sessionToken);
 
     yield put(AuthCreators.authenticateSuccess(sessionToken));
   } catch (error) {
-    console.tron.log('SAGA: authenticate fail');
+    const message = 'Error ao autenticar o usuário';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(AuthCreators.authenticateFail(message));
+  }
+}
+
+export function* checkAuth() {
+  try {
+    const token = yield getToken();
+
+    yield put(AuthCreators.updateToken(token));
+  } catch (error) {
+    yield put(NotificationCreators.show({
+      message: 'Erro ao validar usuário',
+      isError: true,
+    }));
+  }
+}
+
+export function* logout() {
+    const userObj = Parse.User;
+    yield call([userObj, userObj.logOut]);
+    const token = yield getToken();
+    console.tron.log('SAGA: logout');
+
+    yield put(AuthCreators.updateToken(token));
+  try {
+  } catch (error) {
     console.tron.log(error);
-    yield put(AuthCreators.authenticateFail('Error ao autenticar o usuário'));
+    yield put(NotificationCreators.show({
+      message: 'Erro ao sair da aplicação',
+      isError: true,
+    }));
   }
 }

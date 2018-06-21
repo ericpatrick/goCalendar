@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,6 +24,7 @@ class Login extends Component {
     }).isRequired,
     auth: PropTypes.shape({
       token: PropTypes.string,
+      loading: PropTypes.bool,
     }).isRequired,
     authenticate: PropTypes.func.isRequired,
     navigation: PropTypes.shape({
@@ -52,9 +53,24 @@ class Login extends Component {
     this.props.authenticate(this.props.user.phoneNumber, this.state.password);
   };
 
+  renderButton = () => {
+    const { loading } = this.props.auth;
+    return loading
+      ? (<ActivityIndicator size="large" color={colors.transparentWhite} />)
+      : (
+        <TouchableOpacity
+          id="sign-in-button"
+          style={styles.button}
+          onPress={() => this.login()}
+        >
+          <Text style={styles.buttonLabel}>Login</Text>
+        </TouchableOpacity>
+      );
+  };
+
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled keyboardVerticalOffset={-200}>
         <Text style={styles.title}>SCHEDULER</Text>
         <View style={styles.inputContainer}>
           <Icon name="phone" size={20} color={colors.transparentWhite} style={styles.icon} />
@@ -74,8 +90,7 @@ class Login extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            keyboardType="numeric"
-            placeholder="Seu número de telefone"
+            placeholder="Sua senha screta"
             style={styles.callNumber}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
@@ -84,14 +99,12 @@ class Login extends Component {
             onChangeText={text => this.setState({ password: text })}
           />
         </View>
-        <TouchableOpacity
-          id="sign-in-button"
-          style={styles.button}
-          onPress={() => this.login()}
-        >
-          <Text style={styles.buttonLabel}>Login</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.buttonContainer}>
+          {
+            this.renderButton()
+          }
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }

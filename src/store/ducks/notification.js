@@ -1,22 +1,23 @@
 export const Types = {
   SHOW: 'notification/SHOW',
-  CLEAR: 'NOTIFICATION/CLEAR'
+  CLEAR: 'NOTIFICATION/CLEAR',
 };
 
 const INITIAL_STATE = {
   isError: false,
   message: '',
   duration: 0,
+  modalMode: false,
 };
 
 export default function notification(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.SHOW:
-      const { message, isError, duration } = action.payload.params;
       return {
-        message,
-        isError,
-        duration: duration || 2000,
+        message: action.payload.params.message,
+        isError: action.payload.params.isError,
+        duration: action.payload.params.duration || 3000,
+        modalMode: (action.payload.params.modalMode === true),
       };
     case Types.CLEAR:
       return INITIAL_STATE;
@@ -29,7 +30,7 @@ export const Creators = {
   show: params => ({
     type: Types.SHOW,
     payload: {
-      params
+      params,
     },
   }),
 

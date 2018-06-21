@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // paddingHorizontal: metrics.basePadding * 2,
     backgroundColor: colors.primary,
+    position: 'relative',
   },
 
   calendarContainer: {

@@ -5,10 +5,24 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
     paddingHorizontal: metrics.basePadding * 2,
-    paddingTop: metrics.basePadding * 2,
+    marginTop: 80,
   },
   listContent: {
-    paddingTop: 350,
+    paddingTop: 290,
+  },
+
+  blankContainer: {
+    paddingTop: 370,
+  },
+
+  blankLabel: {
+    color: colors.white,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+
+  loading: {
+    paddingTop: 370,
   },
 });
 

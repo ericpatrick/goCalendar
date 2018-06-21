@@ -15,9 +15,12 @@ export function* checkPhone(action) {
     const isRegistred = users.length > 0;
     yield put(UserCreators.checkPhoneSucess(phone, isRegistred));
   } catch (err) {
-    console.tron.log('SAGA: checkPhone fail');
-    console.tron.log(JSON.stringify(err));
-    yield put(UserCreators.checkPhoneFail('Error ao buscar telefone'));
+    const message = 'Error ao buscar telefone';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(UserCreators.checkPhoneFail(message));
   }
 }
 
@@ -41,7 +44,12 @@ export function* createUser(action) {
     yield put(UserCreators.createUserSuccess(userSaved));
     yield put(AuthCreators.authenticateSuccess(sessionToken));
   } catch (error) {
-    yield put(UserCreators.createUserFail('Falha ao criar usuário'));
+    const message = 'Falha ao criar usuário';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(UserCreators.createUserFail(message));
   }
 }
 
@@ -55,7 +63,12 @@ export function* loadUser() {
 
     yield put(UserCreators.loadUserSuccess(user));
   } catch (error) {
-    yield put(UserCreators.loadUserFail('Erro ao obetr usuário!'));
+    const message = 'Erro ao carregar dados do usuário!';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(UserCreators.loadUserFail(message));
   }
 
 }
@@ -81,6 +94,11 @@ export function* saveUser(action) {
     }));
     yield put(UserCreators.saveUserSuccess(userUpdated));
   } catch (error) {
-    yield put(UserCreators.saveUserFail('Erro ao salvar usuário'));
+    const message = 'Erro ao atualizar o usuário';
+    yield put(NotificationCreators.show({
+      message,
+      isError: true,
+    }));
+    yield put(UserCreators.saveUserFail(message));
   }
 }

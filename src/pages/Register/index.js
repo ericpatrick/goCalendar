@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -19,10 +19,10 @@ class Register extends Component {
   };
 
   static propTypes = {
-    // user: PropTypes.shape({
-    //   phoneNumber: PropTypes.string.isRequired,
-    // }).isRequired,
-    phoneNumber: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      phoneNumber: PropTypes.string,
+      loading: PropTypes.bool
+    }).isRequired,
     auth: PropTypes.shape({
       token: PropTypes.string,
     }).isRequired,
@@ -51,14 +51,30 @@ class Register extends Component {
   }
 
   register = () => {
+    const { phoneNumber } = this.props.user;
     this.props.createUser({
-      username: this.props.phoneNumber,
+      username: phoneNumber,
       fullName: this.state.fullName,
       password: this.state.password,
     });
   };
 
+  renderButton = () => {
+    const { loading } = this.props.user;
+    return loading
+      ? (<ActivityIndicator size="large" color={colors.transparentWhite} />)
+      : (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.register()}
+        >
+          <Text style={styles.buttonLabel}>Criar conta grátis</Text>
+        </TouchableOpacity>
+      );
+  };
+
   render() {
+    const { phoneNumber } = this.props.user;
     return (
       <View style={styles.container}>
         <Text style={styles.title}>SCHEDULER</Text>
@@ -72,7 +88,7 @@ class Register extends Component {
             style={styles.callNumber}
             underlineColorAndroid="rgba(0, 0, 0, 0)"
             placeholderTextColor={colors.transparentWhite}
-            value={this.props.phoneNumber}
+            value={phoneNumber}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -102,19 +118,18 @@ class Register extends Component {
             onChangeText={text => this.setState({ password: text })}
           />
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.register()}
-        >
-          <Text style={styles.buttonLabel}>Criar conta grátis</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          {
+            this.renderButton()
+          }
+        </View>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  phoneNumber: state.user.phoneNumber,
+  user: state.user,
   auth: state.auth,
 });
 const mapDispatchTOProps = dispatch => bindActionCreators(UserCreators, dispatch);

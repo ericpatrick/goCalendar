@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   View,
@@ -7,32 +8,45 @@ import {
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
-  AsyncStorage,
+  KeyboardAvoidingView,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import moment from 'moment';
+import Notification from 'components/Notification';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Creators as EventsCreators} from 'store/ducks/events';
-import Helpers from 'helpers';
+import { Creators as EventsCreators } from 'store/ducks/events';
 import { colors } from 'styles';
 
 import styles from './styles';
 
 class NewEvent extends Component {
-  static propTypes = {};
+  static propTypes = {
+    visible: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    toggleNewEventVisible: PropTypes.func.isRequired,
+    addEvent: PropTypes.func.isRequired,
+  };
 
   static defaultProps = {};
+
+  static getDerivedStateFromProps(props, state) {
+    return (this.props && this.props.visible)
+      ? state
+      : {
+        date: '',
+        eventName: '',
+        eventPlace: '',
+      };
+  }
 
   state = {
     date: '',
     eventName: '',
     eventPlace: '',
-
-    loading: false,
   };
+
 
   cancelInput = () => {
     this.props.toggleNewEventVisible();
@@ -40,15 +54,11 @@ class NewEvent extends Component {
 
   addEvent = () => {
     const { date, eventName, eventPlace } = this.state;
-    if (date.length > 0 && eventName.length > 0 && eventPlace.length > 0) {
-      // const key = Helpers.getStorageKey('token');
-      // const uid = await AsyncStorage.getItem(key);
-      this.props.addEvent({
-        date,
-        name: eventName,
-        place: eventPlace,
-      });
-    }
+    this.props.addEvent({
+      date,
+      name: eventName,
+      place: eventPlace,
+    });
   };
 
   renderButtons() {
@@ -71,16 +81,17 @@ class NewEvent extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, visible } = this.props;
     return (
       <Modal
         animationType="fade"
-        visible={this.props.visible}
+        visible={visible}
         transparent
         onRequestClose={() => {}}
+        style={{ zIndex: 1 }}
       >
         <View style={styles.overlay} />
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="position" enabled keyboardVerticalOffset={-100}>
           <Text style={styles.title}>Criar evento</Text>
           <View style={styles.dateContainer}>
             <Icon name="calendar" size={20} colors={colors.darkGray} />
@@ -125,11 +136,12 @@ class NewEvent extends Component {
           />
 
           { loading
-            ? <ActivityIndicator size="large" color={colors.black} />
+            ? <ActivityIndicator size="large" color={colors.transparentBlack} />
             : this.renderButtons()
           }
 
-        </View>
+        </KeyboardAvoidingView>
+        <Notification embedded />
       </Modal>
     );
   }
@@ -137,6 +149,7 @@ class NewEvent extends Component {
 
 const mapStateToProps = state => ({
   visible: state.events.newEventVisible,
+  loading: state.events.loading,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(EventsCreators, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(NewEvent);
