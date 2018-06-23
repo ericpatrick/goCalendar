@@ -1,6 +1,6 @@
 export default class Helpers {
   static appName = 'goCalendar';
-  static parseAppId = '123';
+  static parseAppId = 'Do2t8bgBNY';
 
   static getStorageKey(key) {
     return `@${Helpers.appName}:${key}`;

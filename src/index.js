@@ -24,7 +24,7 @@ export default class App extends Component {
 
     Parse.setAsyncStorage(AsyncStorage);
     Parse.initialize(Helpers.parseAppId);
-    Parse.serverURL = 'http://192.168.25.8:1337/parse';
+    Parse.serverURL = 'https://gocalendar-parse.herokuapp.com/parse';
   }
 
   state = {
