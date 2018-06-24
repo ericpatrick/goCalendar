@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import createRootNavigator from 'routes';
 import Parse from 'parse/react-native';
+import codePush from 'react-native-code-push';
 
 import { AsyncStorage, StyleSheet, View } from 'react-native';
 import Helpers from 'helpers';
@@ -14,7 +15,7 @@ import { Creators as AuthCreators} from 'store/ducks/auth';
 
 import Notification from 'components/Notification';
 
-export default class App extends Component {
+class App extends Component {
   static propTypes = {};
 
   static defaultProps = {};
@@ -61,3 +62,7 @@ export default class App extends Component {
     );
   }
 }
+
+export default codePush({
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+})(App)
