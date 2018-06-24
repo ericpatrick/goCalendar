@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import createRootNavigator from 'routes';
 import Parse from 'parse/react-native';
 
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, StyleSheet, View } from 'react-native';
 import Helpers from 'helpers';
 
 import 'config/ReactotronConfig';
@@ -53,10 +53,10 @@ export default class App extends Component {
 
     return (
       <Provider store={store}>
-        <Fragment>
+        <View style={StyleSheet.absoluteFill}>
           <Routes />
           <Notification />
-        </Fragment>
+        </View>
       </Provider>
     );
   }

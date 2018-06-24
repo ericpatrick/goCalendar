@@ -9,7 +9,6 @@ import { Creators as NotificationCreators } from 'store/ducks/notification';
 function* getToken() {
   const key = Helpers.getParseKey('currentUser');
   const value = yield call([AsyncStorage, AsyncStorage.getItem], key);
-  console.tron.log(value);
   const user = value ? JSON.parse(value) : null;
 
   return (user && user.sessionToken) || '';
@@ -48,15 +47,13 @@ export function* checkAuth() {
 }
 
 export function* logout() {
+  try {
     const userObj = Parse.User;
     yield call([userObj, userObj.logOut]);
     const token = yield getToken();
-    console.tron.log('SAGA: logout');
 
     yield put(AuthCreators.updateToken(token));
-  try {
   } catch (error) {
-    console.tron.log(error);
     yield put(NotificationCreators.show({
       message: 'Erro ao sair da aplicação',
       isError: true,
